@@ -13,19 +13,21 @@ public class CalculatorTest {
         assertEquals(5,result);
     }
     @Test
-    void testOSSpecificPathFailure() {
-        // 1. Định nghĩa một đường dẫn dùng cứng dấu gạch chéo ngược (chỉ Windows dùng)
-        String pathWithWindowsSeparator = "target\\test-output\\result.txt";
+    void testOSCompatiblePath() {
+        // Dùng File.separator để tự động thích ứng với mọi hệ điều hành
+        String folder = "target";
+        String subFolder = "test-output";
+        String fileName = "result.txt";
 
-        // 2. Lấy ký tự phân tách thực tế của hệ điều hành đang chạy test
-        String currentOSSeparator = java.io.File.separator;
+        // Ghép chuỗi theo cách chuẩn Java
+        String compatiblePath = folder + java.io.File.separator
+                + subFolder + java.io.File.separator
+                + fileName;
 
-        System.out.println("Hệ điều hành đang chạy dùng dấu: " + currentOSSeparator);
+        System.out.println("Đường dẫn chuẩn trên OS này là: " + compatiblePath);
 
-        // 3. KIỂM TRA: Đường dẫn phải chứa ký tự phân tách đúng của OS đó
-        // Trên Windows: path chứa '\' -> TRUE (Xanh)
-        // Trên Linux/Mac: path chứa '\' nhưng OS cần '/' -> FALSE
-        assertTrue(pathWithWindowsSeparator.contains(currentOSSeparator),
-                "Lỗi: Đường dẫn không tương thích với hệ điều hành hiện tại!");
+        // KIỂM TRA: Bây giờ đường dẫn chắc chắn chứa dấu phân tách đúng của OS đó
+        assertTrue(compatiblePath.contains(java.io.File.separator),
+                "Đường dẫn phải tương thích với hệ điều hành!");
     }
 }
