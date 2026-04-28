@@ -1,0 +1,14 @@
+2026-04-28 22:53:25.414 [org.example.Calculator.main()] INFO  org.example.Calculator - Ung dung Calculator voi Logging da bat dau
+2026-04-28 22:53:25.416 [org.example.Calculator.main()] INFO  org.example.Calculator - Dang thuc hien phep cong giua 10 va 20
+2026-04-28 22:53:25.421 [org.example.Calculator.main()] ERROR org.example.Calculator - Loi: Khong the chia cho so 0!
+2026-04-28 22:53:25.422 [org.example.Calculator.main()] ERROR org.example.Calculator - Co loi xay ra trong qua trinh thuc thi
+java.lang.ArithmeticException: Division by zero
+	at org.example.Calculator.divide(Calculator.java:16)
+	at org.example.Calculator.main(Calculator.java:25)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
