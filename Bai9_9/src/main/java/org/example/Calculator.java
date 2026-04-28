@@ -27,4 +27,5 @@ public class Calculator {
             logger.error("Co loi xay ra trong qua trinh thuc thi", e);
         }
     }
+    //
 }
