@@ -1,0 +1,33 @@
+name: Bai 3 Java CI with Maven
+
+on:
+  push:
+    paths:
+      - 'Bai9_3/**' # Chỉ chạy khi có thay đổi trong thư mục Bai9_3
+  pull_request:
+    paths:
+      - 'Bai9_3/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and Package Bài 3
+        # Trỏ đúng vào file pom của Bài 3
+        run: mvn -B package --file Bai9_3/pom.xml
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculator-app-bai3
+          path: Bai9_3/target/*.jar

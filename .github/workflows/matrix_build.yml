@@ -1,0 +1,30 @@
+name: Bai 4 Matrix Build
+
+on:
+  push:
+    paths:
+      - 'Bai9_4/**' # Chỉ chạy khi có thay đổi trong thư mục Bai9_4
+  pull_request:
+    paths:
+      - 'Bai9_4/**'
+
+jobs:
+  matrix-test:
+    strategy:
+      matrix:
+        # Ma trận chạy trên 3 hệ điều hành khác nhau
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Matrix Test Bài 4
+        # Chạy test cho Bài 4 trên từng hệ điều hành trong ma trận
+        run: mvn -B test --file Bai9_4/pom.xml
