@@ -13,25 +13,19 @@ public class CalculatorTest {
         assertEquals(5,result);
     }
     @Test
-    void testOSSpecificPathFailure() throws java.io.IOException {
-        // Dấu \ chỉ có tác dụng phân tách thư mục trên Windows.
-        // Trên Linux/Mac, nó sẽ coi nguyên cụm "target\test-output\result.txt" là 1 tên file duy nhất.
-        String path = "target\\test-output\\result.txt";
+    void testOSSpecificPathFailure() {
+        // 1. Định nghĩa một đường dẫn dùng cứng dấu gạch chéo ngược (chỉ Windows dùng)
+        String pathWithWindowsSeparator = "target\\test-output\\result.txt";
 
-        java.io.File file = new java.io.File(path);
+        // 2. Lấy ký tự phân tách thực tế của hệ điều hành đang chạy test
+        String currentOSSeparator = java.io.File.separator;
 
-        // Tạo thư mục cha nếu chưa có
-        file.getParentFile().mkdirs();
+        System.out.println("Hệ điều hành đang chạy dùng dấu: " + currentOSSeparator);
 
-        // Hành động này sẽ tạo ra sự khác biệt:
-        boolean created = file.createNewFile();
-
-        // Kiểm tra xem file có thực sự tồn tại ở đúng cấu trúc thư mục không
-        // Trên Linux/Mac, nếu không dùng đúng dấu /, việc quản lý file sẽ bị sai lệch
-        assertTrue(file.exists(), "File should exist at the specified path");
-
-        // Cách gây lỗi mạnh hơn: Kiểm tra tính tuyệt đối của đường dẫn
-        // Trên Linux, đường dẫn chứa \ sẽ không được coi là đường dẫn chuẩn (normalized)
-        assertTrue(path.contains(java.io.File.separator), "Path should use the OS-specific separator");
+        // 3. KIỂM TRA: Đường dẫn phải chứa ký tự phân tách đúng của OS đó
+        // Trên Windows: path chứa '\' -> TRUE (Xanh)
+        // Trên Linux/Mac: path chứa '\' nhưng OS cần '/' -> FALSE
+        assertTrue(pathWithWindowsSeparator.contains(currentOSSeparator),
+                "Lỗi: Đường dẫn không tương thích với hệ điều hành hiện tại!");
     }
 }
