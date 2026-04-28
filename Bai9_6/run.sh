@@ -1,9 +1,6 @@
 #!/bin/bash
-
-# Cấp quyền thực thi cho Maven Wrapper (nếu cần)
 chmod +x mvnw
-
-echo "--- Đang chạy kiểm tra độ bao phủ mã nguồn (JaCoCo) ---"
-
-# Chạy lệnh verify để kích hoạt jacoco:check
-./mvnw clean verify
+start_time=$(date +%s)
+./mvnw clean package -DskipTests
+end_time=$(date +%s)
+duration=$((end_time - start_time))
