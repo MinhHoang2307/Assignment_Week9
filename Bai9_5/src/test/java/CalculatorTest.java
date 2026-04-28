@@ -12,22 +12,20 @@ public class CalculatorTest {
         int result = calc.add(2,3);
         assertEquals(5,result);
     }
+
     @Test
-    void testOSCompatiblePath() {
-        // Dùng File.separator để tự động thích ứng với mọi hệ điều hành
-        String folder = "target";
-        String subFolder = "test-output";
-        String fileName = "result.txt";
-
-        // Ghép chuỗi theo cách chuẩn Java
-        String compatiblePath = folder + java.io.File.separator
-                + subFolder + java.io.File.separator
-                + fileName;
-
-        System.out.println("Đường dẫn chuẩn trên OS này là: " + compatiblePath);
-
-        // KIỂM TRA: Bây giờ đường dẫn chắc chắn chứa dấu phân tách đúng của OS đó
-        assertTrue(compatiblePath.contains(java.io.File.separator),
-                "Đường dẫn phải tương thích với hệ điều hành!");
+    void testSubtract() {
+        Calculator calc = new Calculator();
+        assertEquals(1, calc.subtract(3, 2));
     }
+    @Test
+    void testAll() {
+        Calculator calc = new Calculator();
+        assertEquals(5, calc.add(2, 3));
+        assertEquals(1, calc.subtract(3, 2));
+        assertEquals(6, calc.multiply(2, 3));
+        assertEquals(2, calc.divide(4, 2));
+    }
+// Viết thêm cho đến khi hết các hàm trong Calculator
+
 }
