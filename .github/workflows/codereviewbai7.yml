@@ -1,19 +1,26 @@
 name: Bai 7 Automated Code Review
 
 on:
-  pull_request: # QUAN TRỌNG: Chỉ chạy khi tạo Pull Request
+  push:
     branches: [ "main" ]
     paths:
-      - 'Bai9_7/**'
+      - 'Bai9_7/**' # Chạy khi có code mới ở folder bài 7
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'Bai9_7/**' # Chạy khi mở PR liên quan đến bài 7
+  workflow_dispatch: # Nút bấm chạy thủ công trong tab Actions
 
 jobs:
-  checkstyle:
+  review:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write # Cho phép Bot ghi bình luận
+      pull-requests: write # Cần quyền này để Bot có thể comment vào PR
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -22,13 +29,25 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Run Checkstyle Inspection
+      # Bước 1: Chạy Checkstyle để kiểm tra định dạng code
+      - name: Run Checkstyle
+        id: checkstyle
+        # Chạy checkstyle và không dừng build ngay lập tức để Bot có thể comment
         run: mvn checkstyle:check --file Bai9_7/pom.xml
+        continue-on-error: true
 
-      # Bot tự động đăng bình luận vào dòng code lỗi (Inline Feedback)
-      - name: Run Checkstyle Reviewer
-        if: failure() # Chỉ chạy nếu bước trên phát hiện lỗi
+      # Bước 2: Bot tự động đăng phản hồi trực tiếp (Inline Feedback) vào Pull Request
+      - name: Checkstyle Reviewer Bot
+        # Chỉ chạy bước này nếu đang trong một Pull Request
+        if: github.event_name == 'pull_request'
         uses: dbelyaev/action-checkstyle@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          level: warning
+          level: warning # Hiện cảnh báo cho các lỗi định dạng
+
+      # Bước 3: Ép build thất bại nếu Checkstyle có lỗi (để khóa nút Merge)
+      - name: Final Status Check
+        if: steps.checkstyle.outcome == 'failure'
+        run: |
+          echo "Checkstyle phát hiện lỗi định dạng code! Vui lòng sửa lại."
+          exit 1
