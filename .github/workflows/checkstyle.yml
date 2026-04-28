@@ -3,51 +3,23 @@ name: Bai 7 Automated Code Review
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'Bai9_7/**' # Chạy khi có code mới ở folder bài 7
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'Bai9_7/**' # Chạy khi mở PR liên quan đến bài 7
-  workflow_dispatch: # Nút bấm chạy thủ công trong tab Actions
+  workflow_dispatch:
 
 jobs:
   review:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write # Cần quyền này để Bot có thể comment vào PR
-
+      pull-requests: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
-
-      # Bước 1: Chạy Checkstyle để kiểm tra định dạng code
       - name: Run Checkstyle
-        id: checkstyle
-        # Chạy checkstyle và không dừng build ngay lập tức để Bot có thể comment
         run: mvn checkstyle:check --file Bai9_7/pom.xml
-        continue-on-error: true
-
-      # Bước 2: Bot tự động đăng phản hồi trực tiếp (Inline Feedback) vào Pull Request
-      - name: Checkstyle Reviewer Bot
-        # Chỉ chạy bước này nếu đang trong một Pull Request
-        if: github.event_name == 'pull_request'
-        uses: dbelyaev/action-checkstyle@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          level: warning # Hiện cảnh báo cho các lỗi định dạng
-
-      # Bước 3: Ép build thất bại nếu Checkstyle có lỗi (để khóa nút Merge)
-      - name: Final Status Check
-        if: steps.checkstyle.outcome == 'failure'
-        run: |
-          echo "Checkstyle phát hiện lỗi định dạng code! Vui lòng sửa lại."
-          exit 1
